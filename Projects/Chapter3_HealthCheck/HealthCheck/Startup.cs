@@ -43,7 +43,20 @@ namespace HealthCheck
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = (context)=>
+                {
+                    //Retrieve cahe configuration from appesettings.json
+                    // Disable Cashing for all static files.
+                    context.Context.Response.Headers["Cashe-Control"] =
+                        Configuration["StaticFiles:Headers:Cache-Control"];
+                    context.Context.Response.Headers["Pragma"] =
+                        Configuration["StaticFiles:Headers:Pragma"];;
+                    context.Context.Response.Headers["Expires"] =
+                        Configuration["StaticFiles:Headers:Expires"];;
+                }
+            });
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
