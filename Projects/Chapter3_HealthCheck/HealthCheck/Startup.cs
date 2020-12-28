@@ -26,6 +26,8 @@ namespace HealthCheck
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +65,9 @@ namespace HealthCheck
             }
 
             app.UseRouting();
-
+            //The /hc parameters we passed to the UseHealthChecks middleware will create a server-side route for the health checks.
+            app.UseHealthChecks("/hc"); 
+           //It's also worth noting that we added that middleware right before UseEndpoints so that our new route won't be overridden by the general-purpose Controller route pattern specified there.
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
