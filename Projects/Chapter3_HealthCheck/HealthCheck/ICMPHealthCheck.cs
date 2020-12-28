@@ -9,11 +9,18 @@ namespace HealthCheck
 {
     public class ICMPHealthCheck : IHealthCheck
     {
-        private string Host = "www.does-not-exist.com";
-        private int Timeout = 300;
+
+        private string Host {get; set;}
+        private int Timeout {get; set;}
+
+        public ICMPHealthCheck(string host, int timeout)
+        {
+            Host = host;
+            Timeout = timeout;
+        }
 
         public async Task<HealthCheckResult> CheckHealthAsync (
-            HealthCheckConext context,
+            HealthCheckContext context,
             CancellationToken CancellationToken = default)
             {
                 try
@@ -24,20 +31,29 @@ namespace HealthCheck
                        switch (replay.Status)
                        {
                            case IPStatus.Success:
+                            string msg = String.Format(
+                               "ICMP to {0} took {1} ms.", Host, replay.RoundtripTime);
+                           
                                 return (replay.RoundtripTime > Timeout)
-                                        ? HealthCheckResult.Degraded()
-                                        : HealthCheckResult.Healthy();
+                                        ? HealthCheckResult.Degraded(msg)
+                                        : HealthCheckResult.Healthy(msg);
                             default:
-                                return HealthCheckResult.Unhealthy();
+                            string err = String.Format("IMCP to {0} failed: {1}", Host, replay.Status);
+                                return HealthCheckResult.Unhealthy(err);
 
                        }
                    }
                 }
                 catch (Exception e)
-                {
+                    {
+                         string err = String.Format(
+                             "IMCP to {0} failed: {1}",
+                                Host, 
+                                e.Message);
                     return HealthCheckResult.Unhealthy();
-                }
+                    }
             }
+        }
+
     }
 
-}

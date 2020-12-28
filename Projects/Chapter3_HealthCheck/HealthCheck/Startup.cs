@@ -27,7 +27,10 @@ namespace HealthCheck
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddCheck("ICMP_01", new ICMPHealthCheck("www.ryadel.com", 100))
+                .AddCheck("ICMP_02", new ICMPHealthCheck("www.google.com", 100))
+                .AddCheck("ICMP_03", new ICMPHealthCheck("www.does-not-exist.com", 100));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +69,7 @@ namespace HealthCheck
 
             app.UseRouting();
             //The /hc parameters we passed to the UseHealthChecks middleware will create a server-side route for the health checks.
-            app.UseHealthChecks("/hc"); 
+            app.UseHealthChecks("/hc", new CustomHealthCheckOption() ); 
            //It's also worth noting that we added that middleware right before UseEndpoints so that our new route won't be overridden by the general-purpose Controller route pattern specified there.
             app.UseEndpoints(endpoints =>
             {
