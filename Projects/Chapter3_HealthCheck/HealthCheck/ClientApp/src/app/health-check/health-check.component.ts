@@ -60,7 +60,7 @@ interface Result {
 interface Check {
   name: string;
   status: string;
-  reponseTime: number;
+  responseTime: number;
 }
 
 
