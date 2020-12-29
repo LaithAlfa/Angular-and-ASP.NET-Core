@@ -4,7 +4,7 @@
 
 import {Component, Inject } from '@angular/core';
 import {HttpClient } from '@angular/common/http';
-import { error } from '@angular/compiler/src/util';
+
 
 
 
@@ -22,7 +22,7 @@ middleware that we set up earlier on (see the 'hc' string).
 */
 
 @Component({
-    selector: 'app=health-check',
+    selector: 'app-health-check',
     templateUrl: './health-check.component.html',
     styleUrls: ['./health-check.component.css']
   })
@@ -36,9 +36,10 @@ export class HealthCheckComponent {
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string){
     }
+
     ngOnInit() {
-      this.http.get<Result>(this.baseUrl = "hc").subscribe(result => {
-        this.result =this.result;
+      this.http.get<Result>(this.baseUrl + "hc").subscribe(result => {
+        this.result = result;
       },
       error => console.error(error));
     }
@@ -60,6 +61,7 @@ interface Result {
 interface Check {
   name: string;
   status: string;
+  description: string;
   responseTime: number;
 }
 
