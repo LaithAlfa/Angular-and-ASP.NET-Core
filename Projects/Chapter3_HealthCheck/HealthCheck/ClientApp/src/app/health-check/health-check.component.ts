@@ -62,7 +62,7 @@ interface Check {
   name: string;
   status: string;
   description: string;
-  responseTime: number;
+  response: number;
 }
 
 
