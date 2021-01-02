@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using WorldCities.Data;
 
 namespace WorldCities
 {
@@ -26,6 +28,13 @@ namespace WorldCities
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            // Add EntityFrameWork support SqlServer.
+            services.AddEntityFrameworkSqlServer();
+            //Add ApplicationAdContext
+            services.AddDbContext<ApplicationDbContext>(Options =>
+            Options.UseSqlServer(
+                Configuration.GetConnectionString("DefaultConnection")
+            ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
