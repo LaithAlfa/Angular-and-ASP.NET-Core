@@ -55,12 +55,11 @@ namespace WorldCities.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CityExists(id))
-                    {
-                        return NotFound();
+                {
+                    return NotFound();
+                }else{
+                    throw;
                     }
-                    else{
-                        throw;
-                        }
                 }
             return NoContent();
         }
